@@ -1,0 +1,22 @@
+.project__card {
+    width: 100%;
+    background-color: rgb(188, 255, 179);
+    border: 1px solid rgba(200,200,179,100);
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.project__card:hover {
+    background-color: #84fc94;
+}
+
+@media (min-width: 576px) {
+    .project__card {
+        width: 25%;
+    }
+}
