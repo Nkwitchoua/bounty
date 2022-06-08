@@ -6,6 +6,8 @@ const INIT_STATE = {
     usersLoading: true,
     userLoading: true,
     usersError: null,
+    linksIcons: null,
+    linksIconsLoading: true
 }
 
 const usersSlice = createSlice({
@@ -29,10 +31,17 @@ const usersSlice = createSlice({
         userSuccess(state, action) {
             state.user = action.payload;
             state.userLoading = false;
+        },
+        linksIconsAreLoading(state) {
+            state.linksIconsLoading = true;
+        },
+        linksIconsSuccess(state, action) {
+            state.linksIcons = action.payload;
+            state.linksIconsLoading = false;
         }
     }
 })
 
-export const {usersAreLoading, usersSuccess, usersError, userIsLoading, userSuccess} = usersSlice.actions;
+export const {usersAreLoading, usersSuccess, usersError, userIsLoading, userSuccess, linksIconsAreLoading, linksIconsSuccess} = usersSlice.actions;
 
 export default usersSlice.reducer;

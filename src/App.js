@@ -11,19 +11,20 @@ import { ToastContainer } from "react-toastify"
 import { auth } from "./firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import { useEffect, useState } from 'react';
-import { setCurrentUserAction } from './store/actions/authUserActions';
+import { setAuthUserData, setCurrentUserAction } from './store/actions/authUserActions';
 import UserContextProvider from './contexts/userContext';
+import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
 
 function App() {
 
-  // const [currentUser, setCurrentUser] = useState(null);
   const dispatch = useDispatch()
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
-      // setCurrentUser(user);
       if (user){
         dispatch(setCurrentUserAction(user.email));
+        dispatch(setAuthUserData(user.email));
       }else{
         dispatch(setCurrentUserAction(null));
       }
@@ -31,14 +32,14 @@ function App() {
   }, [])
 
   return (
-    // <Provider store={store}>
       <BrowserRouter>
-        <UserContextProvider>
           <Header/>
           <Routes>
             <Route path='/' element={<MainPage/>} />
             <Route path='/profiles' element={<Profiles/>} />
             <Route path='/jobs' element={<Jobs/>} />
+            <Route path='/profiles/:userId' element={<Profile/>} />
+            <Route path='/edit-profile/:userId' element={<EditProfile/>} />
           </Routes>
         <ToastContainer
                 position="top-right"
@@ -50,9 +51,7 @@ function App() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover/>
-        </UserContextProvider>
       </BrowserRouter>
-    // </Provider>
   );
 }
 

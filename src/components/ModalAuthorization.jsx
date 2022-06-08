@@ -12,9 +12,6 @@ import { userContext } from '../contexts/userContext';
 
 const ModalAuthorization = ({show, handleClose, title}) => {
 
-  const { userDocRef } = useContext(userContext)
-//   const [userDocRef, setUserDocRef] = useState("");
-  const [imageUpload, setImageUpload] = useState(null);
   const [form, setForm] = useState({
       password: "",
       email: "",
@@ -22,7 +19,8 @@ const ModalAuthorization = ({show, handleClose, title}) => {
       surname: ""
   });
 
-  const [imagePath, setImagePath] = useState(null);
+  const { currentUserId } = useSelector(state => state.authUser)
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const inputHandler = (event) => {
@@ -32,33 +30,11 @@ const ModalAuthorization = ({show, handleClose, title}) => {
     })
   };
 
-  const uploadImage = async () => {
-      let imageId = v4();
-      const metadata = {
-        contentType: 'image/jpeg',
-      };
-      const imageListRef = ref(storage, "avatars/")
-      if(!imageUpload) return null;
-      const imageRef = ref(storage, `avatars/${imageUpload.photo.name + imageId}`);
-      await uploadBytes(imageRef, imageUpload)
-        console.log(userDocRef, "USERDOCREF");
-    //   await listAll(imageListRef).forEach(item => {
-    //       console.log(item);
-          getDownloadURL(ref(storage, `avatars/${imageUpload.photo.name + imageId}`))
-            .then(url => {console.log(url)
-                updateDoc(doc(db, "users", userDocRef), {
-                photo: `${url}`
-            }
-      )})
-    // }
-    // )
-  }
-
   const handleAuthorization = () => {
     if(title == "Sign Up") {
        dispatch(signUp(form));
-       uploadImage();
-       navigate("/");
+       handleClose();
+       navigate(`/edit-profile/${currentUserId}`);
     } else {
         // handleLogin()
     }
@@ -92,13 +68,6 @@ const ModalAuthorization = ({show, handleClose, title}) => {
                             type='password' 
                             placeholder='Create password*'
                             onChange={(event) => inputHandler(event)}/>
-                        <h6>Upload your photo</h6>
-                        <FormControl 
-                            name="photo"
-                            type='file'
-                            onChange={(event) => setImageUpload({
-                                photo: event.target.files[0]
-                            })}/>
                     </Modal.Body> :
                     <Modal.Body className='d-flex flex-wrap gap-3'>
                         <FormControl 
