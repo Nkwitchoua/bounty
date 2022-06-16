@@ -1,14 +1,8 @@
-import React, { useContext, useState } from 'react'
-import { Button, Container, FormControl, Modal } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Button, FormControl, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
-import { db, storage } from '../firebaseConfig';
-import { getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
-import { v4 } from "uuid";
 import { signUp } from '../store/actions/authUserActions';
-import { AddUser } from '../store/actions/usersActions';
 import { useNavigate } from 'react-router-dom';
-import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { userContext } from '../contexts/userContext';
 
 const ModalAuthorization = ({show, handleClose, title}) => {
 

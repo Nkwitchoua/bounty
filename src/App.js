@@ -15,6 +15,7 @@ import { setAuthUserData, setCurrentUserAction } from './store/actions/authUserA
 import UserContextProvider from './contexts/userContext';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import SearchPage from './pages/SearchPage';
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
             <Route path='/jobs' element={<Jobs/>} />
             <Route path='/profiles/:userId' element={<Profile/>} />
             <Route path='/edit-profile/:userId' element={<EditProfile/>} />
+            <Route path='/search' element={<SearchPage/>} />
           </Routes>
         <ToastContainer
                 position="top-right"

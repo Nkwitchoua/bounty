@@ -25,12 +25,12 @@ const Profile = () => {
   }, [user]);
 
   const icons = {
-      discord: <Discord/>,
-      instagram: <Instagram/>,
-      youtube: <Youtube/>,
-      twitter: <Twitter/>,
-      twitch: <Twitch/>,
-      facebook: <Facebook/>
+      discord: <Discord style={{color: "violet"}}/>,
+      instagram: <Instagram style={{color: "pink"}}/>,
+      youtube: <Youtube style={{color: "red"}}/>,
+      twitter: <Twitter style={{color: "blue"}}/>,
+      twitch: <Twitch style={{color: "violet"}}/>,
+      facebook: <Facebook style={{color: "blue"}}/>
   }
 
   if(userLoading || linksIconsLoading) {
@@ -78,7 +78,7 @@ const Profile = () => {
                 <div>
                     <h5 className='text-dark'>Social Media:</h5>
                     <div className='d-flex'>
-                        {   user.links ?
+                        {   user.links && user.links.length > 0 ?
                             linksIcons.map((link, index) => {
                                 return (
                                     <a href={user.links[index]}>

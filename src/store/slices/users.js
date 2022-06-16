@@ -7,7 +7,8 @@ const INIT_STATE = {
     userLoading: true,
     usersError: null,
     linksIcons: null,
-    linksIconsLoading: true
+    linksIconsLoading: true,
+    lastDoc: null,
 }
 
 const usersSlice = createSlice({
@@ -18,7 +19,8 @@ const usersSlice = createSlice({
             state.usersLoading = true;
         },
         usersSuccess(state, action) {
-            state.users = action.payload;
+            state.users = action.payload.users;
+            state.lastDoc = action.payload.lastDoc;
             state.usersLoading = false;
         },
         usersError(state, action) {
@@ -38,10 +40,24 @@ const usersSlice = createSlice({
         linksIconsSuccess(state, action) {
             state.linksIcons = action.payload;
             state.linksIconsLoading = false;
+        },
+        usersNextSuccess(state, action) {
+            state.lastDoc = action.payload.lastDoc;
+            state.users.push(...action.payload.users);
+            state.usersLoading = false;
         }
     }
 })
 
-export const {usersAreLoading, usersSuccess, usersError, userIsLoading, userSuccess, linksIconsAreLoading, linksIconsSuccess} = usersSlice.actions;
+export const {
+    usersAreLoading, 
+    usersSuccess, 
+    usersError, 
+    userIsLoading, 
+    userSuccess, 
+    linksIconsAreLoading, 
+    linksIconsSuccess, 
+    usersNextSuccess, 
+    } = usersSlice.actions;
 
 export default usersSlice.reducer;

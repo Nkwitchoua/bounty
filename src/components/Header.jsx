@@ -5,10 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalAuthorization from './ModalAuthorization';
 import { authUserSignOut } from '../store/actions/authUserActions';
+import { SearchUsers } from "../store/actions/usersActions";
 
 const Header = () => {
 
     const { currentUserData, currentUserId } = useSelector(state => state.authUser);
+    const [ searchType, setSearchType ] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [ searchMenu, setSearchMenu ] = useState(false);
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [show, setShow] = useState(false);
@@ -25,6 +29,16 @@ const Header = () => {
         navigate("/");
     }
 
+    const handleSearch = () => {
+        if(!searchQuery) {
+            return;
+        }
+        navigate("/search")
+        dispatch(SearchUsers(searchQuery, searchType));
+    }
+
+
+
     return (
         <Navbar className="navbar navbar-dark bg-dark" expand="lg">
             <Container>
@@ -40,14 +54,44 @@ const Header = () => {
                         <Nav.Link onClick={() => navigate("/jobs")}>Jobs</Nav.Link>
                         <Nav.Link onClick={() => navigate("/profiles")}>Profiles</Nav.Link>
                     </Nav>
-                    <Form className="d-flex justify-content-center flex-grow-1">
-                        <FormControl
-                            type="search"
-                            placeholder="Search"
-                            className="me-2 w-50"
-                            aria-label="Search"
-                        />
-                        <Button variant="outline-warning">Search</Button>
+                    <Form className="d-flex justify-content-center flex-grow-1 position-relative">
+                        <div className='position-relative mx-3 m-0 p-0'>
+                            <FormControl
+                                type="search"
+                                placeholder={searchType ? `Searching for ${searchType}` : "Search"}
+                                className="dropdown-toggle"
+                                id="search-menu-drop"
+                                aria-label="Search"
+                                onClick={() => setSearchMenu(true)}
+                                onChange={(event) => setSearchQuery(event.target.value)}
+                            />
+                        <Dropdown 
+                            autoClose="outside" 
+                            onToggle={() => setSearchMenu(false)} 
+                            show={searchMenu}
+                            className="header__search-menu">
+                            <Dropdown.Menu>
+                                <Dropdown.Item 
+                                    onClick={() => {
+                                        setSearchType("projects")
+                                        setSearchMenu(false)
+                                        }}>
+                                            Find Projects
+                                </Dropdown.Item>
+                                <Dropdown.Item 
+                                        onClick={() => {
+                                            setSearchType("professionals")
+                                            setSearchMenu(false);
+                                        }}>
+                                    Find Professionals
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        </div>
+                        <Button 
+                            variant="outline-warning"
+                            disabled
+                            onClick={() => handleSearch()}>Search</Button>
                     </Form>
                     <NavDropdown.Divider style={{ backgroundColor: "#fff" }} />
                     {

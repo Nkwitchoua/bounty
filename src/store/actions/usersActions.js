@@ -1,24 +1,73 @@
 import { linksIconsSuccess, userIsLoading, usersAreLoading, usersError, usersSuccess, userSuccess } from "../slices/users";
-import { getDocs, collection, getDoc, addDoc, doc, updateDoc } from "firebase/firestore";
+import { getDocs, collection, getDoc, addDoc, doc, updateDoc, limit, orderBy, query, startAfter, where } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { toast } from "react-toastify";
 import { setNewUserDocRef } from "../slices/authUser";
 
 export const GetUsers = () => async (dispatch) => {
-    dispatch(usersAreLoading);
+    dispatch(usersAreLoading());
     try {
         const usersList = [];
-        const users = await getDocs(collection(db, "users"));
+        const users = await getDocs(query(collection(db, "users"), limit(10)));
+        
         await users.docs
-            .forEach(user => {
+        .forEach(user => {
                 usersList.push({
                     ...user.data(),
                     id: user.id
                 })
             })
-        dispatch(usersSuccess(usersList))
+        const lastDoc = await users.docs[users.docs.length - 1].id;
+        dispatch(usersSuccess({ users: usersList, lastDoc }))
     } catch(error) {
         dispatch(usersError(error))
+    }
+}
+
+export const SearchUsers = (search, searchType) => async (dispatch) => {
+    dispatch(usersAreLoading());
+    let searchSet = []
+    if(searchType == "projects") {
+        searchSet.push("jobs", "type_of_job");
+    } else {
+        searchSet.push("users", "career");
+    }
+    try {
+        const usersList = [];
+        const users = await getDocs(query(db, searchSet[0]), limit(10), where(searchSet[1], "==", search));
+        console.log(users);
+        users.docs.forEach((user) => {
+            console.log(user);
+            usersList.push({
+                ...user.data(),
+                id: user.id
+            })
+        })
+        console.log(usersList);
+        const lastDoc = await users.docs[users.docs.length - 1];
+        dispatch(usersSuccess({users: usersList, lastDoc}));
+    } catch(error) {
+        dispatch(usersError(error))
+    }
+}
+
+export const GetUsersNext = (lastDoc) => async (dispatch) => {
+    dispatch(usersAreLoading());
+    try {
+        const usersList = [];
+        const users = await getDocs(query(
+            collection(db, "users"),
+            limit(10),
+            startAfter(lastDoc)
+        ))
+        users.forEach(user => {
+            usersList.push({
+                ...user.data(),
+                id: user.id
+            })
+        })
+    } catch(err) {
+        dispatch(usersError(err.message))
     }
 }
 

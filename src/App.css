@@ -40,3 +40,9 @@
 .hover-bg-light:hover {
   background-color: #dfdfdf;
 }
+
+.header__search-menu {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
